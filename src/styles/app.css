@@ -1,0 +1,422 @@
+/*General*/
+
+@font-face {
+  font-family: 'public-pixel';
+  src: url('../fonts/Public-Pixel/PublicPixel-rv0pA.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 500;
+}
+
+:root {
+  font-family: 'public-pixel', Arial, Helvetica, sans-serif;
+  color: white;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(to right, rgb(14, 31, 68), rgb(22, 70, 143));
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'public-pixel', Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  border: none;
+  color: white;
+  background-color: rgb(21, 126, 40);
+}
+
+/*Form*/
+
+.form--active {
+  height: 100vh;
+  justify-content: center;
+}
+
+.form {
+  width: 350px;
+  align-self: center;
+  justify-self: center;
+  text-align: center;
+}
+
+fieldset {
+  box-sizing: border-box;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'public-pixel', Arial, Helvetica, sans-serif;
+  padding: 5px 15px;
+  outline: none;
+  font-size: 1.25rem;
+  background-color: rgba(46, 169, 185, 0.53);
+  border: none;
+  color: white;
+}
+
+.submit-btn {
+  padding: 8px 50px;
+  border-radius: 100px;
+}
+
+.submit-btn:hover {
+  background-color: rgb(17, 105, 33);
+}
+
+/*Header*/
+
+.header {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+  color: #ffffff;
+}
+
+h1 {
+  font-size: 4rem;
+}
+
+/*Animations*/
+
+@keyframes typing {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: rgb(255, 255, 255);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes invalid {
+  0% {
+    background-color: rgba(146, 29, 29, 0);
+    border-color: rgba(151, 41, 41, 0);
+  }
+  50% {
+    background-color: rgba(146, 29, 29, 0.6);
+    border-color: rgba(151, 41, 41, 0.8);
+  }
+  100% {
+    background-color: rgba(146, 29, 29, 0);
+    border-color: rgba(151, 41, 41, 0);
+  }
+}
+
+/*Game*/
+
+.responsive-msg {
+  display: none;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.msg-container {
+  text-align: center;
+  width: min-content;
+  align-self: center;
+}
+
+.main-content {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 2em 150px;
+  height: 100%;
+  width: 100%;
+  gap: 1em;
+}
+
+.board-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-board,
+.computer-board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 600px;
+  height: 600px;
+  outline: 1px solid #ffffff;
+}
+
+.square {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+  height: 10%;
+  box-sizing: border-box;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+}
+
+.hit-icon,
+.sunk-icon {
+  width: 80%;
+}
+
+.miss-icon {
+  width: 50%;
+}
+
+.msg-element {
+  font-size: 0.75rem;
+  overflow: hidden;
+  border-right: 0.15em solid rgb(255, 255, 255);
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0.15em;
+  animation:
+    typing 2s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+  display: inline-block;
+}
+
+.play-btn {
+  padding: 5px 15px;
+  animation: pulse 1.5s ease-in-out infinite;
+  background-color: maroon;
+}
+
+.--btn-active {
+  background-color: rgb(21, 126, 40);
+}
+
+.--selected {
+  box-sizing: border-box;
+  border: 3px solid rgb(63, 151, 41);
+  outline: 1px solid rgb(0, 0, 0);
+  background-color: rgba(29, 146, 54, 0.2);
+  z-index: 100;
+}
+
+.--valid {
+  border: 3px solid rgb(63, 151, 41, 0.3);
+  outline: 1px solid rgb(0, 0, 0, 0.3);
+  background-color: rgba(29, 146, 54, 0.3);
+}
+
+.--invalid {
+  animation: invalid 0.25s ease infinite;
+}
+
+/*Footer*/
+
+.footer {
+  font-size: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+ul {
+  list-style-type: none;
+  display: flex;
+  gap: 2em;
+}
+
+.footer a {
+  color: white;
+}
+
+/*Responsive Design*/
+
+@media (max-width: 700px) {
+  h1 {
+    font-size: 1rem;
+  }
+
+  .responsive-msg {
+    display: block;
+    justify-self: center;
+    position: absolute;
+    top: 45%;
+  }
+
+  .main {
+    display: none;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 10px;
+  }
+}
+
+@media (min-width: 701px) {
+  h1 {
+    font-size: 1.15rem;
+  }
+
+  .msg-element {
+    font-size: 0.4rem;
+  }
+
+  .main-content {
+    flex-direction: row;
+    padding: 0 2em 1em;
+  }
+
+  .player-board,
+  .computer-board {
+    width: 270px;
+    height: 250px;
+  }
+
+  .play-btn {
+    font-size: 0.5rem;
+  }
+
+  .footer {
+    font-size: 0.25rem;
+    padding-bottom: 1em;
+  }
+}
+
+@media (min-width: 800px) {
+  .main-content {
+    padding: 1em;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 1, 35rem;
+  }
+
+  .msg-element {
+    font-size: 0.8rem;
+  }
+
+  .player-board,
+  .computer-board {
+    width: 400px;
+    height: 400px;
+  }
+
+  .footer {
+    font-size: 0.35rem;
+  }
+}
+
+@media (min-width: 950px) {
+  .main-content {
+    padding: 1em;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 1, 35rem;
+  }
+
+  .msg-element {
+    font-size: 0.8rem;
+  }
+
+  .player-board,
+  .computer-board {
+    width: 450px;
+    height: 450px;
+  }
+
+  .footer {
+    font-size: 0.35rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  h1 {
+    font-size: 1, 5rem;
+  }
+
+  .msg-element {
+    font-size: 1rem;
+  }
+
+  .player-board,
+  .computer-board {
+    width: 480px;
+    height: 480px;
+  }
+
+  .play-btn {
+    font-size: 0.75rem;
+  }
+
+  .footer {
+    font-size: 0.4rem;
+  }
+}
+
+@media (min-width: 1350px) {
+  .main-content {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  .play-btn {
+    font-size: 1rem;
+  }
+
+  .player-board,
+  .computer-board {
+    width: 600px;
+    height: 600px;
+  }
+}
