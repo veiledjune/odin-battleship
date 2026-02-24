@@ -95,3 +95,15 @@ export const Gameboard = () => {
     allShipsSunk,
   };
 };
+
+export const playGame = (() => {
+  const players = [];
+  const createPlayers = (playerName) => {
+    const player = new Player(playerName, true);
+    const computer = new Player();
+    players.push(player, computer);
+  };
+
+  const getPlayers = () => players;
+  return { createPlayers, getPlayers };
+})();
