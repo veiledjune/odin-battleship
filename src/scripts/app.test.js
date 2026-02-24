@@ -220,3 +220,20 @@ test('Valid if previous moves are updated', () => {
   expect(prevMoves.has(80)).toBe(true);
   expect(prevMoves.has(90)).toBe(false);
 });
+
+test('Valid if not all ships are sunk', () => {
+  const game = Gameboard();
+  game.placeShip([60], 1);
+  game.placeShip([70], 1);
+  game.receiveAttack(60);
+  expect(game.allShipsSunk()).toBe(false);
+});
+
+test('Valid if all ships are sunk', () => {
+  const game = Gameboard();
+  game.placeShip([60], 1);
+  game.placeShip([70], 1);
+  game.receiveAttack(60);
+  game.receiveAttack(70);
+  expect(game.allShipsSunk()).toBe(true);
+});

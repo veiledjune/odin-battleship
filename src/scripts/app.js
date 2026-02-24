@@ -75,6 +75,8 @@ export const Gameboard = () => {
 
   const getPrevMoves = () => prevMoves;
 
+  const allShipsSunk = () => [...placedShips].every((ship) => ship.sunk);
+
   return {
     getGameboard,
     getShips,
@@ -82,5 +84,6 @@ export const Gameboard = () => {
     receiveAttack,
     getMissedAttacks,
     getPrevMoves,
+    allShipsSunk,
   };
 };
