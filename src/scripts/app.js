@@ -19,6 +19,14 @@ export class Ship {
   }
 }
 
+export class Player {
+  constructor(playerName = 'Computer', isPlayer = false) {
+    this.playerName = playerName;
+    this.isPlayer = isPlayer;
+    this.game = Gameboard();
+  }
+}
+
 export const Gameboard = () => {
   const gameboard = new Array(100).fill(null);
   const missedAttacks = new Set();
