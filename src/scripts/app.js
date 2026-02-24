@@ -1,4 +1,5 @@
 import { validateShipPlacement } from './validate.js';
+import { getCoordinates } from './getCoordinates.js';
 
 export class Ship {
   constructor(coordinates, length) {
@@ -85,6 +86,25 @@ export const Gameboard = () => {
 
   const allShipsSunk = () => [...placedShips].every((ship) => ship.sunk);
 
+  const randomizeShips = () => {
+    gameboard.fill(null);
+    placedShips.clear();
+    for (let i = 1; i <= 4; i++) currentShips[`l${i}`] = 0;
+    let shipLength = 4;
+    while (shipLength > 0) {
+      while (currentShips[`l${shipLength}`] < maxShips[`l${shipLength}`]) {
+        const coordinates = getCoordinates.getRandomCoordinates(
+          shipLength,
+          gameboard,
+          maxShips,
+          currentShips,
+        );
+        placeShip(coordinates, shipLength);
+      }
+      shipLength--;
+    }
+  };
+
   return {
     getGameboard,
     getShips,
@@ -93,6 +113,7 @@ export const Gameboard = () => {
     getMissedAttacks,
     getPrevMoves,
     allShipsSunk,
+    randomizeShips,
   };
 };
 
@@ -100,7 +121,10 @@ export const playGame = (() => {
   const players = [];
   const createPlayers = (playerName) => {
     const player = new Player(playerName, true);
+
     const computer = new Player();
+    player.game.randomizeShips();
+    computer.game.randomizeShips();
     players.push(player, computer);
   };
 
