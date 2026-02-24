@@ -43,5 +43,22 @@ export const Gameboard = () => {
 
   const getShips = () => [maxShips, currentShips];
 
-  return { getGameboard, getShips };
+  const placeShip = (coordinates, shipLength) => {
+    const isValid = validateShipPlacement(
+      coordinates,
+      shipLength,
+      gameboard,
+      maxShips,
+      currentShips,
+    );
+
+    if (isValid) {
+      const ship = new Ship(coordinates, shipLength);
+      coordinates.forEach((coordinate) => (gameboard[coordinate] = ship));
+      currentShips[`l${shipLength}`]++;
+      placedShips.add(ship);
+    }
+  };
+
+  return { getGameboard, getShips, placeShip };
 };

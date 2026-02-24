@@ -167,3 +167,27 @@ test('Valid if ships do not wrap', () => {
     false,
   );
 });
+
+test('Valid if ship was placed on board', () => {
+  const game = Gameboard();
+  const board = game.getGameboard();
+  game.placeShip([60, 70, 80], 3);
+  expect(board[60]).toEqual({
+    coordinates: [60, 70, 80],
+    length: 3,
+    hitCount: 0,
+    sunk: false,
+  });
+  expect(board[70]).toEqual({
+    coordinates: [60, 70, 80],
+    length: 3,
+    hitCount: 0,
+    sunk: false,
+  });
+  expect(board[80]).toEqual({
+    coordinates: [60, 70, 80],
+    length: 3,
+    hitCount: 0,
+    sunk: false,
+  });
+});
