@@ -191,3 +191,32 @@ test('Valid if ship was placed on board', () => {
     sunk: false,
   });
 });
+
+test('Valid if ship hitCount is incremented', () => {
+  const game = Gameboard();
+  const board = game.getGameboard();
+  game.placeShip([60, 70, 80], 3);
+  const ship = board[60];
+  game.receiveAttack(60);
+  expect(ship.hitCount).toBe(1);
+});
+
+test('Valid if attack misses', () => {
+  const game = Gameboard();
+  game.placeShip([60, 70, 80], 3);
+  expect(game.receiveAttack(90)).toBe(null);
+  const missedAttacks = game.getMissedAttacks();
+  expect(missedAttacks.has(90)).toBe(true);
+  expect(missedAttacks.has(80)).toBe(false);
+});
+
+test('Valid if previous moves are updated', () => {
+  const game = Gameboard();
+  game.placeShip([60, 70, 80], 3);
+  game.receiveAttack(60);
+  game.receiveAttack(80);
+  const prevMoves = game.getPrevMoves();
+  expect(prevMoves.has(60)).toBe(true);
+  expect(prevMoves.has(80)).toBe(true);
+  expect(prevMoves.has(90)).toBe(false);
+});

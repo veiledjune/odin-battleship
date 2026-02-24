@@ -60,5 +60,27 @@ export const Gameboard = () => {
     }
   };
 
-  return { getGameboard, getShips, placeShip };
+  const receiveAttack = (coordinate) => {
+    if (!prevMoves.has(coordinate)) {
+      const attackLocation = gameboard[coordinate];
+      if (attackLocation) {
+        attackLocation.hit();
+      } else missedAttacks.add(coordinate);
+      prevMoves.add(coordinate);
+      return attackLocation;
+    }
+  };
+
+  const getMissedAttacks = () => missedAttacks;
+
+  const getPrevMoves = () => prevMoves;
+
+  return {
+    getGameboard,
+    getShips,
+    placeShip,
+    receiveAttack,
+    getMissedAttacks,
+    getPrevMoves,
+  };
 };
