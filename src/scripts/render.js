@@ -1,4 +1,5 @@
 import { playGame } from './app.js';
+import { playSong } from './audio.js';
 
 export const render = (() => {
   const renderBoard = (player) => {
@@ -83,6 +84,7 @@ export const render = (() => {
       playGame.createPlayers(playerName);
       const [player, computer] = playGame.getPlayers();
       renderGame(player, computer);
+      playSong();
     };
     const inputFieldset = createElement('fieldset', 'input-fieldset');
 
