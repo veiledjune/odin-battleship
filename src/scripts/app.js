@@ -1,3 +1,5 @@
+import { validateShipPlacement } from './validate.js';
+
 export class Ship {
   constructor(coordinates, length) {
     this.coordinates = coordinates;
@@ -16,3 +18,30 @@ export class Ship {
     return this.sunk;
   }
 }
+
+export const Gameboard = () => {
+  const gameboard = new Array(100).fill(null);
+  const missedAttacks = new Set();
+  const prevMoves = new Set();
+  const placedShips = new Set();
+
+  const maxShips = {
+    l1: 4,
+    l2: 3,
+    l3: 2,
+    l4: 1,
+  };
+
+  const currentShips = {
+    l1: 0,
+    l2: 0,
+    l3: 0,
+    l4: 0,
+  };
+
+  const getGameboard = () => gameboard;
+
+  const getShips = () => [maxShips, currentShips];
+
+  return { getGameboard, getShips };
+};
