@@ -105,6 +105,76 @@ export const Gameboard = () => {
     }
   };
 
+  const moveShipState = {
+    selectedShip: null,
+    initialIndex: null,
+    newIndex: null,
+  };
+
+  const clearShipState = () => {
+    moveShipState.selectedShip = null;
+    moveShipState.initialIndex = null;
+    moveShipState.newIndex = null;
+  };
+
+  const getShipState = () => moveShipState;
+
+  const moveShip = (ship, index) => {
+    if (!ship && !moveShipState.selectedShip) return;
+    if (ship) {
+      if (!moveShipState.selectedShip) {
+        moveShipState.selectedShip = ship;
+        moveShipState.selectedShip.coordinates.forEach(
+          (coor) => (gameboard[coor] = null),
+        );
+        moveShipState.initialIndex = index;
+      } else if (moveShipState.selectedShip) {
+        moveShipState.selectedShip.coordinates.forEach(
+          (coor) => (gameboard[coor] = moveShipState.selectedShip),
+        );
+        moveShipState.selectedShip = ship;
+        moveShipState.selectedShip.coordinates.forEach(
+          (coor) => (gameboard[coor] = null),
+        );
+        moveShipState.initialIndex = index;
+      }
+    } else {
+      moveShipState.newIndex = index;
+      const newCoor = getCoordinates.getNewCoordinates(
+        moveShipState.selectedShip,
+        moveShipState.initialIndex,
+        moveShipState.newIndex,
+      );
+      const currShips = {
+        ...currentShips,
+        [`l${moveShipState.selectedShip.length}`]:
+          currentShips[`l${moveShipState.selectedShip.length}`] - 1,
+      };
+      const isValid = validateShipPlacement(
+        newCoor,
+        moveShipState.selectedShip.length,
+        gameboard,
+        maxShips,
+        currShips,
+      );
+      if (isValid) {
+        moveShipState.selectedShip.coordinates = newCoor;
+        newCoor.forEach(
+          (coor) => (gameboard[coor] = moveShipState.selectedShip),
+        );
+        clearShipState();
+        return true;
+      } else {
+        moveShipState.selectedShip.coordinates.forEach(
+          (coor) => (gameboard[coor] = moveShipState.selectedShip),
+        );
+
+        clearShipState();
+        return true;
+      }
+    }
+  };
+
   return {
     getGameboard,
     getShips,
@@ -114,6 +184,8 @@ export const Gameboard = () => {
     getPrevMoves,
     allShipsSunk,
     randomizeShips,
+    moveShip,
+    getShipState,
   };
 };
 
