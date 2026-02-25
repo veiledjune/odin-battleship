@@ -1,7 +1,6 @@
 import { playGame } from './app.js';
 import { playSong } from './audio.js';
 import { events } from './events.js';
-import { getCoordinates } from './getCoordinates.js';
 
 export const render = (() => {
   const renderBoard = (player) => {
@@ -15,8 +14,14 @@ export const render = (() => {
         const square = createElement(
           'div',
           'square',
-          isShip ? `Ship${isShip.length}` : '',
+          isShip ? isShip.length : '',
         );
+        if (isShip) {
+          square.style.backgroundImage = `url('icons/ship${isShip.length}.svg')`;
+          square.style.backgroundSize = 'contain';
+          square.style.backgroundPosition = 'center';
+          square.style.backgroundRepeat = 'no-repeat';
+        }
         square.addEventListener('click', () => {
           events.moveShipEvent(player, isShip, index);
         });
