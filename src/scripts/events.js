@@ -40,19 +40,41 @@ export const events = (() => {
   };
 
   const playButtonEvents = () => {
-    const playButton = document.querySelector('.play-btn');
-    console.log(playButton);
-
+    const [player, computer] = playGame.getPlayers();
     if (!gameState.gameActive) {
-      playButton.textContent = 'Quit';
-      playButton.classList.remove('--btn-active');
-      console.log(gameState);
+      gameState.gameActive = true;
+      gameState.playerTurn = true;
+      render.renderPlayButton(gameState);
     } else {
-      playButton.textContent = 'Start';
-      playButton.classList.add('--btn-active');
+      playGame.resetGameState();
+      render.renderPlayButton(gameState);
+      playGame.resetPlayerBoards();
+      render.renderBoard(player);
+      render.renderBoard(computer);
     }
-    gameState.gameActive = !gameState.gameActive;
-    console.log(gameState);
   };
-  return { moveShipEvent, shipHoverEvent, playButtonEvents };
+
+  const attackEvents = (index) => {
+    const [player, computer] = playGame.getPlayers();
+    if (gameState.gameActive && gameState.playerTurn) {
+      const prevMoves = computer.game.getPrevMoves();
+      if (prevMoves.has(index)) return;
+      const attack = computer.game.receiveAttack(index);
+      render.renderAttack(computer, index, attack);
+      if (attack) {
+        const isSunk = attack.isSunk();
+        if (isSunk) {
+          const allShipsSunk = computer.game.allShipsSunk();
+          if (allShipsSunk) {
+            playGame.resetGameState();
+            render.renderPlayButton(gameState);
+            playGame.resetPlayerBoards();
+            render.renderBoard(player);
+            render.renderBoard(computer);
+          }
+        }
+      }
+    }
+  };
+  return { moveShipEvent, shipHoverEvent, playButtonEvents, attackEvents };
 })();
