@@ -190,6 +190,10 @@ export const Gameboard = () => {
 };
 
 export const playGame = (() => {
+  const gameState = {
+    gameActive: false,
+    playerTurn: true,
+  };
   const players = [];
   const createPlayers = (playerName) => {
     const player = new Player(playerName, true);
@@ -201,5 +205,8 @@ export const playGame = (() => {
   };
 
   const getPlayers = () => players;
-  return { createPlayers, getPlayers };
+
+  const getGameState = () => gameState;
+
+  return { createPlayers, getPlayers, getGameState };
 })();
