@@ -1,5 +1,7 @@
 import { playGame } from './app.js';
 import { playSong } from './audio.js';
+import { events } from './events.js';
+import { getCoordinates } from './getCoordinates.js';
 
 export const render = (() => {
   const renderBoard = (player) => {
@@ -7,12 +9,19 @@ export const render = (() => {
     const computerBoard = document.querySelector('.computer-board');
     const boardArray = player.game.getGameboard();
     if (player.isPlayer) {
-      boardArray.forEach((value) => {
+      playerBoard.textContent = '';
+      boardArray.forEach((value, index) => {
         const isShip = value;
         const square = createElement(
           'div',
           'square',
           isShip ? `Ship${isShip.length}` : '',
+        );
+        square.addEventListener('click', () => {
+          events.moveShipEvent(player, isShip, index);
+        });
+        square.addEventListener('mouseenter', () =>
+          events.shipHoverEvent(player, index),
         );
         playerBoard.appendChild(square);
       });
@@ -103,7 +112,42 @@ export const render = (() => {
     root.appendChild(form);
   };
 
-  return { renderBoard, renderForm, renderGame };
+  const renderSelectShip = (ship) => {
+    const selectedSquares = document.querySelectorAll('.--selected');
+    if (selectedSquares)
+      selectedSquares.forEach((square) =>
+        square.classList.remove('--selected'),
+      );
+    const boardDivs = document.querySelectorAll('.player-board .square');
+    if (ship)
+      ship.coordinates.forEach((coor) =>
+        boardDivs[coor].classList.add('--selected'),
+      );
+  };
+
+  const renderHover = (isValid, newCoor) => {
+    const validSquares = document.querySelectorAll('.--valid');
+    const invalidSquares = document.querySelectorAll('.--invalid');
+    if (validSquares)
+      validSquares.forEach((square) => square.classList.remove('--valid'));
+    if (invalidSquares)
+      invalidSquares.forEach((square) => square.classList.remove('--invalid'));
+    const boardDivs = document.querySelectorAll('.player-board .square');
+
+    newCoor.forEach((coor) => {
+      const square = boardDivs[coor];
+      if (!square) return;
+      square.classList.add(isValid ? '--valid' : '--invalid');
+    });
+  };
+
+  return {
+    renderBoard,
+    renderForm,
+    renderGame,
+    renderSelectShip,
+    renderHover,
+  };
 })();
 
 function createElement(type, className, textContent) {
