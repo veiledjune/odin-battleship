@@ -175,6 +175,17 @@ export const Gameboard = () => {
     }
   };
 
+  const resetBoard = () => {
+    missedAttacks.clear();
+    prevMoves.clear();
+    const ships = [...placedShips];
+    ships.forEach((ship) => {
+      ship.hitCount = 0;
+      ship.isSunk = false;
+    });
+    for (let i = 1; i <= 4; i++) currentShips[`l${i}`] = 0;
+  };
+
   return {
     getGameboard,
     getShips,
@@ -186,6 +197,7 @@ export const Gameboard = () => {
     randomizeShips,
     moveShip,
     getShipState,
+    resetBoard,
   };
 };
 
@@ -208,5 +220,23 @@ export const playGame = (() => {
 
   const getGameState = () => gameState;
 
-  return { createPlayers, getPlayers, getGameState };
+  const resetGameState = () => {
+    gameState.gameActive = false;
+    gameState.playerTurn = true;
+  };
+
+  const resetPlayerBoards = () => {
+    const [player, computer] = players;
+    player.game.resetBoard();
+    computer.game.resetBoard();
+    computer.game.randomizeShips();
+  };
+
+  return {
+    createPlayers,
+    getPlayers,
+    getGameState,
+    resetGameState,
+    resetPlayerBoards,
+  };
 })();
