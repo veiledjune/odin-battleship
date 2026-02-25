@@ -22,17 +22,20 @@ export const render = (() => {
           square.style.backgroundPosition = 'center';
           square.style.backgroundRepeat = 'no-repeat';
         }
-        square.addEventListener('click', () => {
-          events.moveShipEvent(player, isShip, index);
-        });
+        square.addEventListener('click', () =>
+          events.moveShipEvent(player, isShip, index),
+        );
         square.addEventListener('mouseenter', () =>
           events.shipHoverEvent(player, index),
         );
         playerBoard.appendChild(square);
       });
     } else {
-      boardArray.forEach(() => {
+      computerBoard.textContent = '';
+
+      boardArray.forEach((value, index) => {
         const square = createElement('div', 'square');
+        square.addEventListener('click', () => events.attackEvents(index));
         computerBoard.appendChild(square);
       });
     }
@@ -49,6 +52,15 @@ export const render = (() => {
     header.appendChild(headerTitle);
 
     const main = createElement('main', 'main');
+
+    const msgContainer = createElement('div', 'msg-container');
+    const msgElement = createElement(
+      'span',
+      'msg-element',
+      `Welcome Commander ${player.playerName}`,
+    );
+    const mainContent = createElement('div', 'main-content');
+
     const playerBoardContainer = createElement('div', 'board-container');
     const playerNameSpan = createElement(
       'span',
@@ -65,12 +77,6 @@ export const render = (() => {
       computer.playerName,
     );
 
-    const centerContainer = createElement('div', 'center-container');
-    const msgElement = createElement(
-      'span',
-      'msg-element',
-      `Welcome Commander ${player.playerName}`,
-    );
     const playButton = createElement(
       'button',
       'play-btn --btn-active',
@@ -79,9 +85,18 @@ export const render = (() => {
     const computerBoard = createElement('div', 'computer-board');
     computerBoardContainer.append(computerNameSpan, computerBoard);
 
-    centerContainer.append(msgElement, playButton);
-    main.append(playerBoardContainer, centerContainer, computerBoardContainer);
+    msgContainer.appendChild(msgElement);
+
+    mainContent.append(
+      playerBoardContainer,
+      playButton,
+      computerBoardContainer,
+    );
+    main.append(msgContainer, mainContent);
     root.append(header, main);
+    playButton.addEventListener('click', () => {
+      events.playButtonEvents();
+    });
     renderBoard(player);
     renderBoard(computer);
   };
@@ -146,12 +161,46 @@ export const render = (() => {
     });
   };
 
+  const renderAttack = (player, index, attack) => {
+    const board = document.querySelectorAll(
+      player.isPlayer ? '.player-board .squares' : '.computer-board .square',
+    );
+    const msgElement = document.querySelector('.msg-element');
+    if (attack) {
+      const isSunk = attack.isSunk();
+      if (isSunk) {
+        attack.coordinates.forEach(
+          (coor) => (board[coor].textContent = 'SUNK'),
+        );
+        const allShipsSunk = player.game.allShipsSunk();
+        if (allShipsSunk) {
+          msgElement.textContent = player.isPlayer
+            ? 'All your ships have been destroyed. You lose!'
+            : 'All enemy ships have been destroyed. You win!';
+        }
+      } else board[index].textContent = 'HIT';
+    } else board[index].textContent = 'MISS';
+  };
+
+  const renderPlayButton = (gameState) => {
+    const playButton = document.querySelector('.play-btn');
+    if (gameState.gameActive) {
+      playButton.textContent = 'Quit';
+      playButton.classList.remove('--btn-active');
+    } else {
+      playButton.textContent = 'Start';
+      playButton.classList.add('--btn-active');
+    }
+  };
+
   return {
     renderBoard,
     renderForm,
     renderGame,
     renderSelectShip,
     renderHover,
+    renderAttack,
+    renderPlayButton,
   };
 })();
 
