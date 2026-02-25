@@ -58,7 +58,14 @@ export const getCoordinates = (() => {
     }
   };
 
-  return { getRandomCoordinates };
+  const getNewCoordinates = (ship, initialIndex, newIndex) => {
+    const difference = newIndex - initialIndex;
+    const newCoor = [];
+    ship.coordinates.forEach((coor) => newCoor.push(coor + difference));
+    return newCoor;
+  };
+
+  return { getRandomCoordinates, getNewCoordinates };
 })();
 
 function shuffleArray(array) {
