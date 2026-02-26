@@ -2,6 +2,7 @@ import { render } from './render.js';
 import { getCoordinates } from './getCoordinates.js';
 import { validateShipPlacement } from './validate.js';
 import { playGame } from './app.js';
+import { gameSounds } from './audio.js';
 
 export const events = (() => {
   const gameState = playGame.getGameState();
@@ -86,6 +87,7 @@ export const events = (() => {
         if (prevMoves.has(index)) return;
         const attack = computer.game.receiveAttack(index);
         render.renderAttack(computer, index, attack);
+        attack ? gameSounds.playHit() : gameSounds.playMiss();
         if (attack) {
           const isSunk = attack.isSunk();
           if (isSunk) {
@@ -97,7 +99,7 @@ export const events = (() => {
           }
         } else {
           gameState.playerTurn = false;
-          setTimeout(() => playGame.computerMove(), 2500);
+          setTimeout(() => playGame.computerMove(), 3000);
         }
       }
     }

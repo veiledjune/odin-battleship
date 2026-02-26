@@ -1,6 +1,7 @@
 import { validateShipPlacement } from './validate.js';
 import { getCoordinates } from './getCoordinates.js';
 import { render } from './render.js';
+import { gameSounds } from './audio.js';
 
 export class Ship {
   constructor(coordinates, length) {
@@ -325,7 +326,9 @@ export const playGame = (() => {
         index = randomMove;
         attack = player.game.receiveAttack(index);
       }
+
       render.renderAttack(player, index, attack);
+      attack ? gameSounds.playHit() : gameSounds.playMiss();
       if (attack) {
         const isSunk = attack.isSunk();
         if (isSunk) {
@@ -334,10 +337,10 @@ export const playGame = (() => {
           if (allShipsSunk) {
             playGame.resetGameState();
             render.renderPlayButton(gameState);
-          } else setTimeout(() => computerMove(), 2500);
+          } else setTimeout(() => computerMove(), 3000);
         } else {
           getNextComputerMove(player, randomMove, queue);
-          setTimeout(() => computerMove(), 2500);
+          setTimeout(() => computerMove(), 3000);
         }
       } else {
         if (queue.length) queue.shift();
