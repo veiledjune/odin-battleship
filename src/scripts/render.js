@@ -22,12 +22,17 @@ export const render = (() => {
           square.style.backgroundPosition = 'center';
           square.style.backgroundRepeat = 'no-repeat';
         }
+        square.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          events.flipShipEvent(isShip, index);
+        });
         square.addEventListener('click', () =>
           events.moveShipEvent(player, isShip, index),
         );
         square.addEventListener('mouseenter', () =>
           events.shipHoverEvent(player, index),
         );
+
         playerBoard.appendChild(square);
       });
     } else {
