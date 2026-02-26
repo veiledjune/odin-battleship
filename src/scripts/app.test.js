@@ -7,7 +7,7 @@ test('Valid if ship length is 3', () => {
 });
 
 test('Valid if ship hitCount is incremented', () => {
-  const ship = new Ship(3);
+  const ship = new Ship([0, 1, 2], 3);
   ship.hit();
   ship.hit();
   expect(ship.hitCount).toBe(2);
