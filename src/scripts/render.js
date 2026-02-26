@@ -163,7 +163,7 @@ export const render = (() => {
 
   const renderAttack = (player, index, attack) => {
     const board = document.querySelectorAll(
-      player.isPlayer ? '.player-board .squares' : '.computer-board .square',
+      player.isPlayer ? '.player-board .square' : '.computer-board .square',
     );
     const msgElement = document.querySelector('.msg-element');
     if (attack) {
