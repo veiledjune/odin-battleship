@@ -39,8 +39,26 @@ export const events = (() => {
     render.renderHover(isValid, newCoor);
   };
 
+  const flipShipEvent = (ship, index) => {
+    const [player, computer] = playGame.getPlayers();
+    const shipState = player.game.getShipState();
+
+    if (gameState.gameActive) return;
+    const rerender = player.game.flipShip(ship, index, shipState);
+    if (rerender) {
+      render.renderBoard(player);
+    } else
+      setTimeout(() => {
+        const invalidSquares = document.querySelectorAll('.--invalid');
+        invalidSquares.forEach((square) =>
+          square.classList.remove('--invalid'),
+        );
+      }, 1500);
+  };
+
   const playButtonEvents = () => {
     const [player, computer] = playGame.getPlayers();
+
     if (!gameState.gameActive) {
       gameState.gameActive = true;
       gameState.playerTurn = true;
@@ -59,6 +77,7 @@ export const events = (() => {
 
   const attackEvents = (index) => {
     const [player, computer] = playGame.getPlayers();
+
     if (gameState.gameActive) {
       if (gameState.playerTurn) {
         const prevMoves = computer.game.getPrevMoves();
@@ -82,5 +101,11 @@ export const events = (() => {
     }
   };
 
-  return { moveShipEvent, shipHoverEvent, playButtonEvents, attackEvents };
+  return {
+    moveShipEvent,
+    shipHoverEvent,
+    playButtonEvents,
+    attackEvents,
+    flipShipEvent,
+  };
 })();
