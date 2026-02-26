@@ -1,5 +1,6 @@
 import { validateShipPlacement } from './validate.js';
 import { getCoordinates } from './getCoordinates.js';
+import { render } from './render.js';
 
 export class Ship {
   constructor(coordinates, length) {
@@ -181,9 +182,8 @@ export const Gameboard = () => {
     const ships = [...placedShips];
     ships.forEach((ship) => {
       ship.hitCount = 0;
-      ship.isSunk = false;
+      ship.sunk = false;
     });
-    for (let i = 1; i <= 4; i++) currentShips[`l${i}`] = 0;
   };
 
   return {
@@ -232,11 +232,51 @@ export const playGame = (() => {
     computer.game.randomizeShips();
   };
 
+  const getComputerMove = (player) => {
+    const previousMoves = player.game.getPrevMoves();
+    const availableMoves = [];
+    for (let i = 0; i <= 99; i++) {
+      if (previousMoves.has(i)) continue;
+      availableMoves.push(i);
+    }
+    const randomIndex = Math.floor(Math.random() * availableMoves.length);
+    const randomMove = availableMoves[randomIndex];
+    return randomMove;
+  };
+
+  const computerMove = () => {
+    const [player] = players;
+    console.log(player.game.getGameboard());
+
+    const randomMove = getComputerMove(player);
+    if (gameState.gameActive && !gameState.playerTurn) {
+      const attack = player.game.receiveAttack(randomMove);
+      render.renderAttack(player, randomMove, attack);
+      if (attack) {
+        console.log(attack);
+
+        const isSunk = attack.isSunk();
+        if (isSunk) {
+          const allShipsSunk = player.game.allShipsSunk();
+          if (allShipsSunk) {
+            playGame.resetGameState();
+            render.renderPlayButton(gameState);
+          } else computerMove();
+        } else computerMove();
+      } else {
+        gameState.playerTurn = true;
+        return [attack, randomMove];
+      }
+    }
+  };
+
   return {
     createPlayers,
     getPlayers,
     getGameState,
     resetGameState,
     resetPlayerBoards,
+    computerMove,
+    getComputerMove,
   };
 })();
