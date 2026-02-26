@@ -45,6 +45,9 @@ export const events = (() => {
       gameState.gameActive = true;
       gameState.playerTurn = true;
       render.renderPlayButton(gameState);
+      playGame.resetPlayerBoards();
+      render.renderBoard(player);
+      render.renderBoard(computer);
     } else {
       playGame.resetGameState();
       render.renderPlayButton(gameState);
@@ -56,25 +59,28 @@ export const events = (() => {
 
   const attackEvents = (index) => {
     const [player, computer] = playGame.getPlayers();
-    if (gameState.gameActive && gameState.playerTurn) {
-      const prevMoves = computer.game.getPrevMoves();
-      if (prevMoves.has(index)) return;
-      const attack = computer.game.receiveAttack(index);
-      render.renderAttack(computer, index, attack);
-      if (attack) {
-        const isSunk = attack.isSunk();
-        if (isSunk) {
-          const allShipsSunk = computer.game.allShipsSunk();
-          if (allShipsSunk) {
-            playGame.resetGameState();
-            render.renderPlayButton(gameState);
-            playGame.resetPlayerBoards();
-            render.renderBoard(player);
-            render.renderBoard(computer);
+    if (gameState.gameActive) {
+      if (gameState.playerTurn) {
+        const prevMoves = computer.game.getPrevMoves();
+        if (prevMoves.has(index)) return;
+        const attack = computer.game.receiveAttack(index);
+        render.renderAttack(computer, index, attack);
+        if (attack) {
+          const isSunk = attack.isSunk();
+          if (isSunk) {
+            const allShipsSunk = computer.game.allShipsSunk();
+            if (allShipsSunk) {
+              playGame.resetGameState();
+              render.renderPlayButton(gameState);
+            }
           }
+        } else {
+          gameState.playerTurn = false;
+          playGame.computerMove();
         }
       }
     }
   };
+
   return { moveShipEvent, shipHoverEvent, playButtonEvents, attackEvents };
 })();
