@@ -334,10 +334,10 @@ export const playGame = (() => {
           if (allShipsSunk) {
             playGame.resetGameState();
             render.renderPlayButton(gameState);
-          } else computerMove();
+          } else setTimeout(() => computerMove(), 2500);
         } else {
           getNextComputerMove(player, randomMove, queue);
-          computerMove();
+          setTimeout(() => computerMove(), 2500);
         }
       } else {
         if (queue.length) queue.shift();

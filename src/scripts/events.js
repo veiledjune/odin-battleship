@@ -58,7 +58,7 @@ export const events = (() => {
 
   const playButtonEvents = () => {
     const [player, computer] = playGame.getPlayers();
-
+    const msgElement = document.querySelector('.msg-element');
     if (!gameState.gameActive) {
       gameState.gameActive = true;
       gameState.playerTurn = true;
@@ -66,12 +66,14 @@ export const events = (() => {
       playGame.resetPlayerBoards();
       render.renderBoard(player);
       render.renderBoard(computer);
+      msgElement.textContent = `Commander ${player.playerName}, what are your orders?`;
     } else {
       playGame.resetGameState();
       render.renderPlayButton(gameState);
       playGame.resetPlayerBoards();
       render.renderBoard(player);
       render.renderBoard(computer);
+      msgElement.textContent = `Place Your Ships! Press Left-click to move.  Press Right-click to change axis`;
     }
   };
 
@@ -95,7 +97,7 @@ export const events = (() => {
           }
         } else {
           gameState.playerTurn = false;
-          playGame.computerMove();
+          setTimeout(() => playGame.computerMove(), 2500);
         }
       }
     }
