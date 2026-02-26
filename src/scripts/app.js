@@ -268,7 +268,29 @@ export const playGame = (() => {
     computer.game.randomizeShips();
   };
 
-  const getComputerMove = (player) => {
+  const getNextComputerMove = (player, index, queue) => {
+    const prevMoves = player.game.getPrevMoves();
+    const edgeIndices = [
+      9, 19, 29, 39, 49, 59, 69, 79, 89, 10, 20, 30, 40, 50, 60, 70, 80, 90,
+    ];
+    const directions = [
+      [1, 2, 3],
+      [-1, -2, -3],
+      [10, 20, 30],
+      [-10, -20, -30],
+    ];
+    for (const array of directions) {
+      const moveArray = [];
+      for (const value of array) {
+        const move = value + index;
+        if (edgeIndices.includes(move) || prevMoves.has(move)) continue;
+        moveArray.push(move);
+      }
+      queue.push(moveArray);
+    }
+  };
+
+  const getRandomComputerMove = (player) => {
     const previousMoves = player.game.getPrevMoves();
     const availableMoves = [];
     for (let i = 0; i <= 99; i++) {
@@ -280,26 +302,45 @@ export const playGame = (() => {
     return randomMove;
   };
 
+  const queue = [];
+
   const computerMove = () => {
     const [player] = players;
-    console.log(player.game.getGameboard());
-
-    const randomMove = getComputerMove(player);
+    const randomMove = getRandomComputerMove(player);
     if (gameState.gameActive && !gameState.playerTurn) {
-      const attack = player.game.receiveAttack(randomMove);
-      render.renderAttack(player, randomMove, attack);
+      let attack;
+      let index;
+      if (queue.length) {
+        while (queue.length && !queue[0].length) {
+          queue.shift();
+        }
+        if (!queue.length) {
+          index = randomMove;
+          attack = player.game.receiveAttack(index);
+        } else {
+          index = queue[0].shift();
+          attack = player.game.receiveAttack(index);
+        }
+      } else {
+        index = randomMove;
+        attack = player.game.receiveAttack(index);
+      }
+      render.renderAttack(player, index, attack);
       if (attack) {
-        console.log(attack);
-
         const isSunk = attack.isSunk();
         if (isSunk) {
+          queue.length = 0;
           const allShipsSunk = player.game.allShipsSunk();
           if (allShipsSunk) {
             playGame.resetGameState();
             render.renderPlayButton(gameState);
           } else computerMove();
-        } else computerMove();
+        } else {
+          getNextComputerMove(player, randomMove, queue);
+          computerMove();
+        }
       } else {
+        if (queue.length) queue.shift();
         gameState.playerTurn = true;
         return [attack, randomMove];
       }
@@ -313,6 +354,5 @@ export const playGame = (() => {
     resetGameState,
     resetPlayerBoards,
     computerMove,
-    getComputerMove,
   };
 })();
