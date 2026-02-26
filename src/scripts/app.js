@@ -169,11 +169,46 @@ export const Gameboard = () => {
         moveShipState.selectedShip.coordinates.forEach(
           (coor) => (gameboard[coor] = moveShipState.selectedShip),
         );
-
         clearShipState();
-        return true;
       }
     }
+  };
+
+  const flipShip = (ship, index) => {
+    if (!ship) return;
+    ship.coordinates.forEach((coor) => (gameboard[coor] = null));
+    const isHorizontal =
+      Math.abs(ship.coordinates[0] - ship.coordinates[1]) === 1;
+    const newCoor = [];
+    if (!isHorizontal) {
+      for (let i = 0; i < ship.length; i++) {
+        newCoor.push(index + i);
+      }
+    } else {
+      for (let i = 0; i < ship.length; i++) {
+        newCoor.push(index + i * 10);
+      }
+    }
+    const currShips = { ...currentShips };
+    currShips[`l${ship.length}`]--;
+    const isValid = validateShipPlacement(
+      newCoor,
+      ship.length,
+      gameboard,
+      maxShips,
+      currShips,
+    );
+
+    if (isValid) {
+      ship.coordinates = newCoor;
+      newCoor.forEach((coor) => (gameboard[coor] = ship));
+      return isValid;
+    } else {
+      ship.coordinates.forEach((coor) => (gameboard[coor] = ship));
+      const boardDivs = document.querySelectorAll('.player-board .square');
+      newCoor.forEach((coor) => boardDivs[coor].classList.add('--invalid'));
+    }
+    return isValid;
   };
 
   const resetBoard = () => {
@@ -198,6 +233,7 @@ export const Gameboard = () => {
     moveShip,
     getShipState,
     resetBoard,
+    flipShip,
   };
 };
 
