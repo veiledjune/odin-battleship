@@ -62,7 +62,7 @@ export const render = (() => {
     const msgElement = createElement(
       'span',
       'msg-element',
-      `Welcome Commander ${player.playerName}`,
+      `Place Your Ships! Press Left-click to move.  Press Right-click to change axis`,
     );
     const mainContent = createElement('div', 'main-content');
 
@@ -170,21 +170,47 @@ export const render = (() => {
     const board = document.querySelectorAll(
       player.isPlayer ? '.player-board .square' : '.computer-board .square',
     );
+    const div = board[index];
     const msgElement = document.querySelector('.msg-element');
     if (attack) {
       const isSunk = attack.isSunk();
       if (isSunk) {
-        attack.coordinates.forEach(
-          (coor) => (board[coor].textContent = 'SUNK'),
-        );
+        attack.coordinates.forEach((coor) => {
+          const img = createElement('img', 'sunk-icon');
+          img.src = 'icons/sunk.png';
+          board[coor].textContent = '';
+          board[coor].appendChild(img);
+        });
         const allShipsSunk = player.game.allShipsSunk();
         if (allShipsSunk) {
           msgElement.textContent = player.isPlayer
-            ? 'All your ships have been destroyed. You lose!'
-            : 'All enemy ships have been destroyed. You win!';
+            ? "Our fleet has been destroyed. We've lost this battle..."
+            : "We've destroyed the enemy fleet! Victory is ours!";
+        } else {
+          msgElement.textContent = player.isPlayer
+            ? 'Commander, the enemy has sunk a ship!'
+            : "We've sunk a ship Commander, give us your next order!";
         }
-      } else board[index].textContent = 'HIT';
-    } else board[index].textContent = 'MISS';
+      } else {
+        msgElement.textContent = player.isPlayer
+          ? 'Commander, our ship has been hit!'
+          : "You've hit a ship Commander, give us your next order!";
+        const img = createElement('img', 'hit-icon');
+
+        img.src = 'icons/hit.png';
+        div.textContent = '';
+        div.appendChild(img);
+      }
+    } else {
+      msgElement.textContent = player.isPlayer
+        ? "The enemy missed their shot, let's give them hell!"
+        : "We've missed Commander, brace for impact!";
+      const img = createElement('img', 'miss-icon');
+
+      img.src = 'icons/miss.png';
+      div.textContent = '';
+      div.appendChild(img);
+    }
   };
 
   const renderPlayButton = (gameState) => {
