@@ -1,8 +1,8 @@
-import { render } from './render.js';
-import { getCoordinates } from './getCoordinates.js';
-import { validateShipPlacement } from './validate.js';
-import { playGame } from './app.js';
-import { gameSounds } from './audio.js';
+import { render } from "./render.js";
+import { getCoordinates } from "./getCoordinates.js";
+import { validateShipPlacement } from "./validate.js";
+import { playGame } from "./playGame.js";
+import { gameSounds } from "./audio.js";
 
 export const events = (() => {
   const gameState = playGame.getGameState();
@@ -50,16 +50,16 @@ export const events = (() => {
       render.renderBoard(player);
     } else
       setTimeout(() => {
-        const invalidSquares = document.querySelectorAll('.--invalid');
+        const invalidSquares = document.querySelectorAll(".--invalid");
         invalidSquares.forEach((square) =>
-          square.classList.remove('--invalid'),
+          square.classList.remove("--invalid"),
         );
       }, 1500);
   };
 
   const playButtonEvents = () => {
     const [player, computer] = playGame.getPlayers();
-    const msgElement = document.querySelector('.msg-element');
+    const msgElement = document.querySelector(".msg-element");
     if (!gameState.gameActive) {
       gameState.gameActive = true;
       gameState.playerTurn = true;
@@ -99,7 +99,7 @@ export const events = (() => {
           }
         } else {
           gameState.playerTurn = false;
-          setTimeout(() => playGame.computerMove(), 3000);
+          setTimeout(() => playGame.computerMove(), 1000);
         }
       }
     }

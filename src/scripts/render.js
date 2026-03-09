@@ -1,4 +1,4 @@
-import { playGame } from './app.js';
+import { playGame } from './playGame.js';
 import { playSong } from './audio.js';
 import { events } from './events.js';
 
