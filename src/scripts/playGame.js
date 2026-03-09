@@ -93,8 +93,7 @@ export const playGame = (() => {
           attack = player.game.receiveAttack(move);
         }
       } else attack = player.game.receiveAttack(randomMove);
-      render.renderAttack(player, move, attack);
-      attack ? gameSounds.playHit() : gameSounds.playMiss();
+
       if (attack) {
         const isSunk = attack.isSunk();
         if (isSunk) {
@@ -103,18 +102,18 @@ export const playGame = (() => {
           if (allShipsSunk) {
             playGame.resetGameState();
             render.renderPlayButton(gameState);
-          } else setTimeout(() => computerMove(), 1000);
+            return { player, move, attack };
+          } else return { player, move, attack };
         } else {
           getNextComputerMove(player, move, queue);
-          setTimeout(() => computerMove(), 1000);
+          return { player, move, attack };
         }
       } else {
         if (queue.length) queue.shift();
         gameState.playerTurn = true;
-        return;
+        return { player, move, attack };
       }
     }
-    return;
   };
 
   return {
