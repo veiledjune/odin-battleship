@@ -180,13 +180,9 @@ export const Gameboard = () => {
       Math.abs(ship.coordinates[0] - ship.coordinates[1]) === 1;
     const newCoor = [];
     if (!isHorizontal) {
-      for (let i = 0; i < ship.length; i++) {
-        newCoor.push(index + i);
-      }
+      for (let i = 0; i < ship.length; i++) newCoor.push(index + i);
     } else {
-      for (let i = 0; i < ship.length; i++) {
-        newCoor.push(index + i * 10);
-      }
+      for (let i = 0; i < ship.length; i++) newCoor.push(index + i * 10);
     }
     const currShips = { ...currentShips };
     currShips[`l${ship.length}`]--;
@@ -205,7 +201,9 @@ export const Gameboard = () => {
     } else {
       ship.coordinates.forEach((coor) => (gameboard[coor] = ship));
       const boardDivs = document.querySelectorAll('.player-board .square');
-      newCoor.forEach((coor) => boardDivs[coor].classList.add('--invalid'));
+      newCoor.forEach((coor) => {
+        if (boardDivs[coor]) boardDivs[coor].classList.add('--invalid');
+      });
     }
     return isValid;
   };
