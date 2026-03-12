@@ -51,7 +51,11 @@ export const render = (() => {
     if (root.classList.contains('form--active'))
       root.classList.remove('form--active');
     root.textContent = '';
-
+    const responsiveMsg = createElement(
+      'span',
+      'responsive-msg',
+      'Please Rotate Your Device Horizontally!',
+    );
     const header = createElement('header', 'header');
     const headerTitle = createElement('h1', 'header-title', 'Odin Battleship');
     header.appendChild(headerTitle);
@@ -62,7 +66,7 @@ export const render = (() => {
     const msgElement = createElement(
       'span',
       'msg-element',
-      `Place Your Ships! Press Left-click to move.  Press Right-click to change axis`,
+      'Place your ships!',
     );
     const mainContent = createElement('div', 'main-content');
 
@@ -98,7 +102,7 @@ export const render = (() => {
       computerBoardContainer,
     );
     main.append(msgContainer, mainContent);
-    root.append(header, main);
+    root.append(header, responsiveMsg, main);
     playButton.addEventListener('click', () => {
       events.playButtonEvents();
     });
