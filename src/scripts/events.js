@@ -113,7 +113,7 @@ export const events = (() => {
         gameSounds.playHit();
         computerAttackEvent();
       } else gameSounds.playMiss();
-    }, 1000);
+    }, 2000);
   };
 
   return {
